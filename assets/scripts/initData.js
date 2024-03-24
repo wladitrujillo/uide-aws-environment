@@ -1,6 +1,8 @@
 // Usage: mongo <host>:<port>/<database> initData.js
 // Description: This script is used to initialize the database with some data
 
+use facturero;
+
 // Create collections and indexes 
 exists = db.getCollectionNames().includes('catalogs');
 if (!exists) {

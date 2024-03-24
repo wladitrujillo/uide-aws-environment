@@ -1,5 +1,6 @@
 // Usage: mongo localhost:27017/your_db_name countries.js
 // Description: This script will populate the countries and states collections with the data of Ecuador.
+use facturero;
 
 let exists = db.getCollectionNames().includes('countries');
 if (!exists) {
