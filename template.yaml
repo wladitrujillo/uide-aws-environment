@@ -109,6 +109,11 @@ Resources:
           sudo sed -i 's/bindIp: 127.0.0.1/# bindIp: 127.0.0.1\n  bindIp: 0.0.0.0/' /etc/mongod.conf
           sudo systemctl start mongod
           sudo systemctl enable mongod
+          curl https://amazoncloudwatch-agent-us-east-1.s3.us-east-1.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb > amazon-cloudwatch-agent.deb
+          sudo dpkg -i amazon-cloudwatch-agent.deb
+          curl https://raw.githubusercontent.com/wladitrujillo/uide-aws-environment/main/assets/aws-cloudwatch/config.json > config.json
+          sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:config.json -s
+          sudo sed -i 's/#security:/security:\n  authorization: enabled/' /etc/mongod.conf
       Tags:
         - Key: Name
           Value: !Sub "mongodb-ec2-instance"
