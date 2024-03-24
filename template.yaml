@@ -72,7 +72,6 @@ Resources:
             ToPort: 22
             CidrIp: '0.0.0.0/0'
 
-
   KeyPair:
     Type: AWS::EC2::KeyPair
     Properties:
@@ -84,7 +83,7 @@ Resources:
   EC2CloudWatchLogs:
     Type: "AWS::Logs::LogGroup"
     Properties:
-      LogGroupName: !Sub "mongodb"
+      LogGroupName: "mongodb"
       RetentionInDays: 30
 
   EC2InstanceMongoDB:
