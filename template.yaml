@@ -112,19 +112,20 @@ Resources:
           echo "mongodb-org-mongos hold" | sudo dpkg --set-selections
           echo "mongodb-org-tools hold" | sudo dpkg --set-selections
           sudo systemctl start mongod
-          sudo systemctl enable mongod
           curl https://raw.githubusercontent.com/wladitrujillo/uide-aws-environment/main/assets/scripts/users.js > /tmp/users.js
-          mongosh --quiet --file /tmp/users.js
           curl https://raw.githubusercontent.com/wladitrujillo/uide-aws-environment/main/assets/scripts/initData.js > /tmp/initData.js
-          mongosh --quiet --file /tmp/initData.js
           curl https://raw.githubusercontent.com/wladitrujillo/uide-aws-environment/main/assets/scripts/countryEC.js > /tmp/countryEC.js
-          mongosh --quiet --file /tmp/countryEC.js
           curl https://amazoncloudwatch-agent-us-east-1.s3.us-east-1.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb > /tmp/amazon-cloudwatch-agent.deb
           sudo dpkg -i /tmp/amazon-cloudwatch-agent.deb
           curl https://raw.githubusercontent.com/wladitrujillo/uide-aws-environment/main/assets/aws-cloudwatch/config.json > /tmp/config.json
           sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/tmp/config.json -s
+          mongosh --quiet --file /tmp/initData.js
+          mongosh --quiet --file /tmp/users.js
+          mongosh --quiet --file /tmp/countryEC.js
           sudo sed -i 's/#security:/security:\n  authorization: enabled/' /etc/mongod.conf
           sudo sed -i 's/bindIp: 127.0.0.1/# bindIp: 127.0.0.1\n  bindIp: 0.0.0.0/' /etc/mongod.conf
+          sudo systemctl restart mongod
+          sudo systemctl enable mongod
       Tags:
         - Key: Name
           Value: !Sub "mongodb-ec2-instance"
