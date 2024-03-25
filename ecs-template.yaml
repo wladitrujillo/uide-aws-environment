@@ -28,6 +28,28 @@ Parameters:
     
 Resources:
 
+  ECSRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "facturero-ecs-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      Path: /
+      Tags:
+        - Key: Group 
+          Value: !Sub "${AWS::StackName}"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+        - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+
+
   ALBSecurityGroup:
     Type: "AWS::EC2::SecurityGroup"
     Properties:

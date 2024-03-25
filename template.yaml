@@ -119,9 +119,9 @@ Resources:
           sudo dpkg -i /tmp/amazon-cloudwatch-agent.deb
           curl https://raw.githubusercontent.com/wladitrujillo/uide-aws-environment/main/assets/aws-cloudwatch/config.json > /tmp/config.json
           sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/tmp/config.json -s
-          mongosh --quiet --file /tmp/initData.js
-          mongosh --quiet --file /tmp/users.js
-          mongosh --quiet --file /tmp/countryEC.js
+          mongosh < /tmp/users.js
+          mongosh < /tmp/initData.js
+          mongosh < /tmp/countryEC.js
           sudo sed -i 's/#security:/security:\n  authorization: enabled/' /etc/mongod.conf
           sudo sed -i 's/bindIp: 127.0.0.1/# bindIp: 127.0.0.1\n  bindIp: 0.0.0.0/' /etc/mongod.conf
           sudo systemctl restart mongod
