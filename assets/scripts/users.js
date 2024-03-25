@@ -1,4 +1,3 @@
-//create adminUser
 use admin;
 let exists = db.getUser("adminUser");
 if (!exists) {
@@ -13,7 +12,6 @@ if (!exists) {
     });
 }
 
-//create factureroUser 
 use facturero;
 exists = db.getUser("factureroUser");
 if (!exists) {
@@ -25,5 +23,4 @@ if (!exists) {
     });
 }
 
-//exit mongosh
 exit;
