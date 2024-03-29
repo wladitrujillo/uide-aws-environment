@@ -13,6 +13,10 @@ Parameters:
   SubnetIDs:
     Type: CommaDelimitedList
     Default: subnet-874d6fa6,subnet-dd577682,subnet-942f319a,subnet-c65773a0,subnet-69a7cf58,subnet-8f6a9ec3
+  Environment:
+    Type: String
+    Description: Enter the environment name
+    Default: dev
 
 Mappings:
   RegionMap:
@@ -26,7 +30,7 @@ Resources:
   EC2Role:
     Type: "AWS::IAM::Role"
     Properties:
-      RoleName: "ec2-role"
+      RoleName: !Sub "${Environment}-ec2-role"
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -50,14 +54,14 @@ Resources:
       Path: /
       Roles:
         - !Ref EC2Role
-      InstanceProfileName: "ec2-instance-profile"
+      InstanceProfileName: !Sub "${Environment}-ec2-instance-profile"
 
   EC2SecurityGroup:
     # DependsOn: ALBSecurityGroup
     Type: "AWS::EC2::SecurityGroup"
     Properties:
         GroupDescription: "security group for mongodb"
-        GroupName: !Sub "mongodb-security-group" 
+        GroupName: !Sub "${Environment}-mongodb-security-group" 
         Tags: 
           - Key: Group
             Value: !Sub "${AWS::StackName}"
@@ -75,7 +79,7 @@ Resources:
   KeyPair:
     Type: AWS::EC2::KeyPair
     Properties:
-      KeyName: "ec2-keypair"
+      KeyName: !Sub "${Environment}-ec2-keypair"
       Tags:
         - Key: Group
           Value: !Sub "${AWS::StackName}"
@@ -83,7 +87,7 @@ Resources:
   EC2CloudWatchLogs:
     Type: "AWS::Logs::LogGroup"
     Properties:
-      LogGroupName: "mongodb"
+      LogGroupName: !Sub "${Environment}-mongodb-logs"
       RetentionInDays: 30
 
   EC2InstanceMongoDB:
@@ -128,7 +132,7 @@ Resources:
           sudo systemctl enable mongod
       Tags:
         - Key: Name
-          Value: !Sub "mongodb-ec2-instance"
+          Value: !Sub "${Environment}-mongodb"
         - Key: Group
           Value: !Ref AWS::StackName
 
