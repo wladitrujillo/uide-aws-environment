@@ -9,19 +9,24 @@ Parameters:
   VpcId:
     Type: AWS::EC2::VPC::Id
     Description: Select the VPC where you want to deploy your EC2 instance
-    Default: vpc-f104748c
-  SubnetIDs:
-    Type: CommaDelimitedList
-    Default: subnet-874d6fa6,subnet-dd577682,subnet-942f319a,subnet-c65773a0,subnet-69a7cf58,subnet-8f6a9ec3
   Environment:
     Type: String
-    Description: Enter the environment name
+    Description: Environment name
     Default: dev
+    AllowedValues:
+      - dev
+      - qa
+      - prod
+    ConstraintDescription: must specify dev, qa or prod.
 
 Mappings:
   RegionMap:
     us-east-1:
       AMI: ami-080e1f13689e07408 
+    us-east-2:
+      AMI: ami-0b8b44ec9a8f90422
+    us-west-1:
+      AMI: ami-05c969369880fa2c2 
     us-west-2:
       AMI:  ami-08116b9957a259459
 
