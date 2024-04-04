@@ -158,3 +158,8 @@ Outputs:
     Export:
       Name: !Sub "${AWS::StackName}-EC2PrivateIP"
 
+  EC2PublicIP:
+    Description: The public IP address of the newly created EC2 instance
+    Value: !GetAtt EC2InstanceMongoDB.PublicIp
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2PublicIP"
