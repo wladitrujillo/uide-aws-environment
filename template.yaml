@@ -128,7 +128,7 @@ Resources:
           curl https://amazoncloudwatch-agent-us-east-1.s3.us-east-1.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb > /tmp/amazon-cloudwatch-agent.deb
           sudo dpkg -i /tmp/amazon-cloudwatch-agent.deb
           curl https://raw.githubusercontent.com/wladitrujillo/uide-aws-environment/main/assets/aws-cloudwatch/config.json > /tmp/config.json
-          sudo sed 's/"log_group_name": "mongodb-logs",/"log_group_name": "${Environment}-mongodb-logs",/g' /tmp/config.json
+          sudo sed -i 's/"log_group_name": "mongodb-logs",/"log_group_name": "${Environment}-mongodb-logs",/g' /tmp/config.json
           sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/tmp/config.json -s
           mongosh < /tmp/users.js
           mongosh < /tmp/initData.js
