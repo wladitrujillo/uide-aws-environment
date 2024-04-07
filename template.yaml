@@ -1,8 +1,7 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  ec2-instances is a sample application that creates an EC2 instance.
-  load-balancer is a sample application that creates an Application Load Balancer.
+  ec2-instance with mongodb server and aws cloudwatch agent installed
 
 Parameters:
 
@@ -94,7 +93,7 @@ Resources:
     Type: "AWS::Logs::LogGroup"
     Properties:
       LogGroupName: !Sub "${Environment}-mongodb-logs"
-      RetentionInDays: 30
+      RetentionInDays: 7
 
   EC2InstanceMongoDB:
     Type: AWS::EC2::Instance
