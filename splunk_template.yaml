@@ -65,16 +65,16 @@ Resources:
               - Effect: Allow
                 Action:
                   - "cloudwatch:ListMetrics",
-				  -	"cloudwatch:ListDashboards",
-			      -	"cloudwatch:ListMetricStreams",
-                  -	"cloudwatch:ListServiceLevelObjectives",
-                  -	"cloudwatch:ListServices",
-                  -	"cloudwatch:ListTagsForResource",
+		  - "cloudwatch:ListDashboards",
+		  - "cloudwatch:ListMetricStreams",
+                  - "cloudwatch:ListServiceLevelObjectives",
+                  - "cloudwatch:ListServices",
+                  - "cloudwatch:ListTagsForResource",
                   - "cloudwatch:GetMetricStatistics",
-                  -	"logs:DescribeLogGroups",
-                  -	"logs:DescribeLogStreams",
-                  -	"logs:GetLogEvents",
-                  -	"s3:GetBucketLocation"
+                  - "logs:DescribeLogGroups",
+                  - "logs:DescribeLogStreams",
+                  - "logs:GetLogEvents",
+                  - "s3:GetBucketLocation"
                   - "ec2:DescribeInstances",
                   - "autoscaling:DescribeAutoScalingGroups",
                   - "autoscaling:DescribeLaunchConfigurations"
