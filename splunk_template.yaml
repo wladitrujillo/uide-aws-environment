@@ -128,6 +128,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
+          sudo timedatectl set-timezone America/Guayaquil
           echo "installing splunk"
           wget -O /tmp/splunk.deb ${SplunkInstallerUrl}
           dpkg -i /tmp/splunk.deb
