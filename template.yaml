@@ -107,6 +107,7 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe
+          sudo timedatectl set-timezone America/Guayaquil
           sudo apt-get install gnupg curl -y
           curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
              sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
