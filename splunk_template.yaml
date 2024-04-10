@@ -121,7 +121,7 @@ Resources:
     Properties:
       KeyName: !Ref KeyPair
       ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", AMI]
-      InstanceType: t2.large
+      InstanceType: t3a.xlarge
       IamInstanceProfile: !Ref EC2SplunkProfile
       SecurityGroupIds:
         - !Ref EC2SplunkSecurityGroup
