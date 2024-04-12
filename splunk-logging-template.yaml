@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  lambda function for splunk logging enterprise server 
+
+Parameters:
+
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Select the VPC where you want to config your lambda function 
+    AllowedPattern : ".+"
+  VpcSubnet:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Select the subnet where you want to config your lambda function
+    AllowedPattern : ".+"
+  Environment:
+    Type: String
+    Description: Environment name
+    Default: dev
+    AllowedValues:
+      - dev
+      - qa
+      - prod
+    ConstraintDescription: must specify dev, qa or prod.
+  SplunkHecUrl:
+    Type: String
+    Description: Splunk HEC URL
+    AllowedPattern : ".+"
+  SplunkHecToken:
+    Type: String
+    Description: Splunk HEC Token
+    AllowedPattern : ".+"
+
+Resources:
+
+  LambdaSplunkLoggingRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: !Sub "${Environment}-lambda-splunk-logging-role"
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - "sts:AssumeRole"
+      MannaedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+      Path: /
+      Tags:
+        - Key: Group 
+          Value: !Sub "${AWS::StackName}"
+      Policies:
+        - PolicyName: !Sub "${Environment}-lambda-splunk-logging-policy"
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ec2:DescribeInstances"
+                  - "ec2:DescribeInstanceStatus"
+                  - "ec2:StartInstances"
+                  - "ec2:StopInstances"
+                Resource: "*"
+
+  LambdaSplunkSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: !Sub "${Environment}-lambda-splunk-sg"
+      GroupDescription: Security group for lambda function to access splunk server
+      VpcId: !Ref VpcId
+      Tags:
+        - Key: Group
+          Value: !Sub "${AWS::StackName}"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8088
+          ToPort: 8088
+          CidrIp: 0.0.0.0/0
+
+  LambdaSplunkLogging:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: !Sub "${Environment}-splunk-logging"
+      Handler: index.handler
+      Role: !GetAtt LambdaSplunkLoggingRole.Arn
+      Code:
+        S3Bucket: !Sub "${Environment}-lambda-splunk-logging"
+        S3Key: splunk-logging.zip
+      Runtime: nodejs18.x 
+      Timeout: 60
+      MemorySize: 128
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref LambdaSplunkSecurityGroup
+        SubnetIds:
+          - !Select [ 0, !Ref VpcSubnet ]
+          - !Select [ 1, !Ref VpcSubnet ]
+      Environment:
+        Variables:
+          SPLUNK_HEC_TOKEN: !Ref SplunkHecToken
+          SPLUNK_HEC_URL: !Ref SplunkHecUrl
+      Tags:
+        - Key: Group
+          Value: !Sub "${AWS::StackName}"
+
+Outputs:
+
+  EC2InstanceID:
+    Description: The Instance ID of the newly created EC2 instance
+    Value: !Ref EC2Splunk
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2InstanceID"
+
+  EC2PrivateIP:
+    Description: The private IP address of the newly created EC2 instance
+    Value: !GetAtt EC2Splunk.PrivateIp
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2PrivateIP"
+
+  EC2PublicIP:
+    Description: The public IP address of the newly created EC2 instance
+    Value: !GetAtt EC2Splunk.PublicIp
+    Export:
+      Name: !Sub "${AWS::StackName}-EC2PublicIP"

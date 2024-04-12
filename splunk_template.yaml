@@ -103,6 +103,10 @@ Resources:
             IpProtocol: 'tcp'
             ToPort: 8000 
             CidrIp: '0.0.0.0/0'
+          - FromPort: 8088
+            IpProtocol: 'tcp'
+            ToPort: 8088 
+            CidrIp: '0.0.0.0/0'
           - FromPort: 22
             IpProtocol: 'tcp'
             ToPort: 22
